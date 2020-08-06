@@ -133,7 +133,6 @@ class DefaultSpider(scrapy.Spider):
 
     # Override parse()
     def parse(self, response) -> Dict:
-        print("#########")
         if response.status == 404:
             raise Exception('404 Page not foud! Check the base url.')
 
@@ -183,8 +182,6 @@ class DefaultSpider(scrapy.Spider):
         #     'references':references,
         # })
 
-        print("###########################")
-
         for id, is_fixed, title, link, date, author, reference in zip(
             ids, is_fixeds, titles, links, dates, authors, references):
             scrapyed_info = {
@@ -207,7 +204,7 @@ for key, item in data.items():
         txt = f"""
 class {key.capitalize()}Spider(DefaultSpider):
     def __init__(self):
-        from crawling.data import data
+        from server.data import data
         args = data['{key}']
 
         self.name = args['name']

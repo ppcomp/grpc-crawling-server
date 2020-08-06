@@ -7,12 +7,14 @@ import grpc
 
 from server import crawling_pb2
 from server import crawling_pb2_grpc
+from tasks import crawling
 
 
 class Crawling(crawling_pb2_grpc.CrawlingServicer):
 
     def Scrap(self, request, context):
-        return crawling_pb2.ScrapReply(resultCode=1, message='Hello, %s!' % request.board)
+        resultCode, message = crawling(request.board, request.pages)
+        return crawling_pb2.ScrapReply(resultCode=resultCode, message=message)
 
 
 def serve():

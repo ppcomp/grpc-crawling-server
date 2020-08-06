@@ -24,7 +24,7 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = crawling_pb2_grpc.CrawlingStub(channel)
         print("-------------- Scrap --------------")
-        start_scrap(stub)
+        start_scrap(stub, "cse", 3)
 
 
 if __name__ == '__main__':

@@ -5,7 +5,8 @@ import re
 import zlib
 
 import scrapy
-from crawling.data import data
+
+from server.data import data
 from .LinkExtractor import MyLinkExtractor
 
 '''
@@ -132,6 +133,7 @@ class DefaultSpider(scrapy.Spider):
 
     # Override parse()
     def parse(self, response) -> Dict:
+        print("#########")
         if response.status == 404:
             raise Exception('404 Page not foud! Check the base url.')
 
@@ -170,16 +172,18 @@ class DefaultSpider(scrapy.Spider):
         ids, links = self.split_id_and_link(links)  # id, link 추출
         is_fixeds = self.extend_list(is_fixeds, len(ids)-len(is_fixeds))
 
-        self._data_verification({
-            'model':self.model,
-            'ids':ids, 
-            'is_fixeds':is_fixeds,
-            'titles':titles, 
-            'links':links, 
-            'dates':dates, 
-            'authors':authors, 
-            'references':references,
-        })
+        # self._data_verification({
+        #     'model':self.model,
+        #     'ids':ids, 
+        #     'is_fixeds':is_fixeds,
+        #     'titles':titles, 
+        #     'links':links, 
+        #     'dates':dates, 
+        #     'authors':authors, 
+        #     'references':references,
+        # })
+
+        print("###########################")
 
         for id, is_fixed, title, link, date, author, reference in zip(
             ids, is_fixeds, titles, links, dates, authors, references):

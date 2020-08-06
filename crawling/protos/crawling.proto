@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.crawling.crawling";
+option java_outer_classname = "CrawlingProto";
+option objc_class_prefix = "HLW";
+
+package crawling;
+
+service Crawling {
+  rpc Scrap (ScrapRequest) returns (ScrapReply) {}
+}
+
+message ScrapRequest {
+  string board = 1;
+  int32 pages = 2;
+}
+
+message ScrapReply {
+  int32 resultCode = 1;
+  string message = 2;
+}

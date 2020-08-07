@@ -1,7 +1,10 @@
 from concurrent import futures
 import logging
 import sys, os
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+# os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+p = os.path.dirname(os.path.abspath(__file__))
+print(p)
+sys.path.append(p)
 
 import grpc
 

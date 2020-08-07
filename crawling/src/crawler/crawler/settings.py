@@ -14,8 +14,8 @@ LOG_FILE = 'scrapy.log'
 
 BOT_NAME = 'crawler'
 
-SPIDER_MODULES = ['crawler.crawler.spiders']
-NEWSPIDER_MODULE = 'crawler.crawler.spiders'
+SPIDER_MODULES = ['src.crawler.crawler.spiders']
+NEWSPIDER_MODULE = 'src.crawler.crawler.spiders'
 
 # FEED_FORMAT = "csv"
 # FEED_URI = "naver_news.csv"
@@ -70,7 +70,7 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'crawler.crawler.pipelines.CrawlerPipeline': 300,
+   'src.crawler.crawler.pipelines.CrawlerPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

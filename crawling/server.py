@@ -1,16 +1,13 @@
 from concurrent import futures
 import logging
 import sys, os
-# os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-p = os.path.dirname(os.path.abspath(__file__))
-print(p)
-sys.path.append(p)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import grpc
 
-from server import crawling_pb2
-from server import crawling_pb2_grpc
-from tasks import crawling
+from grpc_files import crawling_pb2
+from grpc_files import crawling_pb2_grpc
+from src.tasks import crawling
 
 
 class Crawling(crawling_pb2_grpc.CrawlingServicer):
@@ -23,7 +20,7 @@ class Crawling(crawling_pb2_grpc.CrawlingServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     crawling_pb2_grpc.add_CrawlingServicer_to_server(Crawling(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:50053')
     server.start()
     server.wait_for_termination()
 

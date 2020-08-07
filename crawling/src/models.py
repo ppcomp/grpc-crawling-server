@@ -3,7 +3,7 @@ import os
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date, Boolean
 
-from crawling.data import data
+from .data import data
 
 Base = declarative_base()
 

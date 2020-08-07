@@ -6,7 +6,7 @@ import zlib
 
 import scrapy
 
-from server.data import data
+from src.data import data
 from .LinkExtractor import MyLinkExtractor
 
 '''
@@ -204,7 +204,7 @@ for key, item in data.items():
         txt = f"""
 class {key.capitalize()}Spider(DefaultSpider):
     def __init__(self):
-        from server.data import data
+        from src.data import data
         args = data['{key}']
 
         self.name = args['name']

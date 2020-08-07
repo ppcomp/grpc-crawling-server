@@ -1,12 +1,10 @@
 from __future__ import print_function
 import logging
-import sys, os
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 import grpc
 
-from server import crawling_pb2
-from server import crawling_pb2_grpc
+from grpc_files import crawling_pb2
+from grpc_files import crawling_pb2_grpc
 
 def start_scrap(stub, board=None, pages=1):
     scrap_request = crawling_pb2.ScrapRequest(board=board, pages=pages)
@@ -21,7 +19,7 @@ def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel('localhost:50053') as channel:
         stub = crawling_pb2_grpc.CrawlingStub(channel)
         print("-------------- Scrap --------------")
         start_scrap(stub, "cse", 3)

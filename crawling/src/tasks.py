@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 import logging, sys, os
 from typing import List, Tuple, Dict, TYPE_CHECKING
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # from celery import Celery
 # from celery.schedules import crontab
@@ -12,7 +12,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.log import configure_logging
 from scrapy.settings import Settings
 
-from crawler.crawler.spiders import crawl_spider
+from .crawler.crawler.spiders import crawl_spider
 
 spiders = [
     # crawl_spider에 게시판 크롤링 class 생성 후 이 곳에 추가.
@@ -117,7 +117,7 @@ spiders = [
 
 def get_scrapy_settings():
     scrapy_settings = Settings()
-    os.environ['SCRAPY_SETTINGS_MODULE'] = 'crawler.crawler.settings'
+    os.environ['SCRAPY_SETTINGS_MODULE'] = 'src.crawler.crawler.settings'
     settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
     scrapy_settings.setmodule(settings_module_path, priority='project')
     return scrapy_settings

@@ -122,33 +122,24 @@ def get_scrapy_settings():
     scrapy_settings.setmodule(settings_module_path, priority='project')
     return scrapy_settings
 
-def crawling_start(scrapy_settings: Settings, spiders: List[object]) -> List[Dict]:
+def crawling_start(scrapy_settings: Settings, spider: object) -> List[Dict]:
     process = CrawlerProcess(scrapy_settings)
-    crawler_list = []
-    for spider in spiders:
-        crawler = process.create_crawler(spider)
-        crawler_list.append(crawler)
-        process.crawl(crawler)
+    crawler = process.create_crawler(spider)
+    process.crawl(crawler, args={'callback': self.yield_output})
     process.start()
 
-    stats_dic_list = []
-    for crawler in crawler_list:
-        # stats = crawler.stats   # <class 'scrapy.statscollectors.MemoryStatsCollector'>
-        stats = crawler.stats.get_stats()   # <class 'dict'>
-        stats_dic_list.append(stats)
-    return stats_dic_list
+    # stats = crawler.stats   # <class 'scrapy.statscollectors.MemoryStatsCollector'>
+    stats = crawler.stats.get_stats()   # <class 'dict'>
+    return stats
 
 def crawling(board_name, page_num):
     invalid_board_name = True
-    if board_name:
-        board = f"{board_name.capitalize()}Spider"
-        for i in range(len(spiders)):
-            if spiders[i].__name__ == board:
-                spider_arg = [spiders[i]]
-                invalid_board_name = False
-                break
-    else:
-        spider_arg = spiders
+    board = f"{board_name.capitalize()}Spider"
+    for i in range(len(spiders)):
+        if spiders[i].__name__ == board:
+            spider_arg = spiders[i]
+            invalid_board_name = False
+            break
 
     if invalid_board_name and board_name:
         message = "Invalid board name. Request with correct board name to initialize Database."

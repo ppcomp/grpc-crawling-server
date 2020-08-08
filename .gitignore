@@ -4,6 +4,7 @@
 
 ### Custom ###
 secret.json
+postgres-passwd
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

@@ -27,15 +27,27 @@ class Notice(Base):
     author = Column(String(30), nullable=True)
     reference = Column(String(50), nullable=True)
 
-    __mapper_args__ = {
-        "order_by":(is_fixed.desc(), date.desc())
-    }
+    # __mapper_args__ = {
+    #     "order_by":(is_fixed.desc(), date.desc())
+    # }
 
     # class Meta:
     #     ordering = ['-is_fixed', '-date']  # 기본 정렬: 고정 공지 우선, 시간 내림차순(최신 우선)
 
     def __str__(self):
         return self.title
+
+    def __repr__(self):
+        return "<Notice(id='%s', site='%s', is_fixed=%s, title=%s, link=%s, date=%s, author=%s, reference=%s)>" % (
+            self.id,
+            self.site,
+            self.is_fixed,
+            self.title,
+            self.link,
+            self.date,
+            self.author,
+            self.reference
+        )
 
 """
 class Main(Notice):
@@ -46,16 +58,7 @@ for key, item in data.items():
     txt = f"""
 class {key.capitalize()}(Notice):
     def __repr__(self):
-        return "<{key.capitalize()}(
-            id='%s',
-            site='%s',
-            is_fixed=%s,
-            title=%s,
-            link=%s,
-            date=%s,
-            author=%s,
-            reference=%s
-        )>" % (
+        return "<{key.capitalize()}(id='%s', site='%s', is_fixed=%s, title=%s, link=%s, date=%s, author=%s, reference=%s)>" % (
             self.id,
             self.site,
             self.is_fixed,

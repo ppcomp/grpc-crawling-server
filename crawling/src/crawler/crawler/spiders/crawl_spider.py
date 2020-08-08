@@ -182,6 +182,27 @@ class DefaultSpider(scrapy.Spider):
         #     'references':references,
         # })
 
+        from sqlalchemy import create_engine
+        from sqlalchemy.ext.declarative import declarative_base
+        from sqlalchemy.orm import sessionmaker
+
+        from src import models
+
+        DATABASE_URI = f"postgres+psycopg2://postgres:data1431@localhost:5432/postgres"
+        engine = create_engine(DATABASE_URI)
+        Session = sessionmaker(bind=engine)
+        s = Session()
+        print(s)
+
+        notice = models.Notice(
+            id="test2",
+            site = "test",
+            title = "test",
+            link = "test"
+        )
+        s.add(notice)
+        s.commit()
+
         for id, is_fixed, title, link, date, author, reference in zip(
             ids, is_fixeds, titles, links, dates, authors, references):
             scrapyed_info = {

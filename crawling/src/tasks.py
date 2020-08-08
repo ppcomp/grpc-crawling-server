@@ -1,11 +1,11 @@
 from __future__ import absolute_import, unicode_literals
-import logging, sys, os
+import logging, sys, os, json
 from typing import List, Tuple, Dict, TYPE_CHECKING
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # from celery import Celery
 # from celery.schedules import crontab
-from billiard.context import Process
+import billiard
 import scrapy
 from scrapy.crawler import CrawlerRunner
 from scrapy.crawler import CrawlerProcess
@@ -115,47 +115,78 @@ spiders = [
     crawl_spider.LiberalSpider,
 ]
 
-def get_scrapy_settings():
-    scrapy_settings = Settings()
-    os.environ['SCRAPY_SETTINGS_MODULE'] = 'src.crawler.crawler.settings'
-    settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
-    scrapy_settings.setmodule(settings_module_path, priority='project')
-    return scrapy_settings
+class CustomCrawler:
 
-def crawling_start(scrapy_settings: Settings, spider: object) -> List[Dict]:
-    process = CrawlerProcess(scrapy_settings)
-    crawler = process.create_crawler(spider)
-    process.crawl(crawler, args={'callback': self.yield_output})
-    process.start()
+    def __init__(self):
+        self.output = None
 
-    # stats = crawler.stats   # <class 'scrapy.statscollectors.MemoryStatsCollector'>
-    stats = crawler.stats.get_stats()   # <class 'dict'>
-    return stats
+    def _yield_output(self, data):
+        self.output = data
 
-def crawling(board_name, page_num):
-    invalid_board_name = True
-    board = f"{board_name.capitalize()}Spider"
-    for i in range(len(spiders)):
-        if spiders[i].__name__ == board:
-            spider_arg = spiders[i]
-            invalid_board_name = False
-            break
+    def _crawling_start(
+            self, 
+            scrapy_settings: Settings, 
+            spider: object, 
+            board_name: str, 
+            return_dic:Dict) -> Dict:
+        process = CrawlerProcess(scrapy_settings)
+        crawler = process.create_crawler(spider)
+        process.crawl(crawler, args={'callback': self._yield_output})
+        process.start()
+        return_dic[board_name] = self.output
 
-    if invalid_board_name and board_name:
-        message = "Invalid board name. Request with correct board name to initialize Database."
-        result_code = 1
-    else:
-        scrapy_settings = get_scrapy_settings()
-        crawl_spider.page_num = page_num
-        proc = Process(
-            target=crawling_start, 
-            args=(
-                scrapy_settings,
-                spider_arg,
-            )
-        )
-        proc.start()
-        proc.join()
-        message = "Success."
-        result_code = 0
-    return result_code, message
+        # stats = crawler.stats   # <class 'scrapy.statscollectors.MemoryStatsCollector'>
+        stats = crawler.stats.get_stats()   # <class 'dict'>
+        return stats
+
+    def get_scrapy_settings(self):
+        scrapy_settings = Settings()
+        os.environ['SCRAPY_SETTINGS_MODULE'] = 'src.crawler.crawler.settings'
+        settings_module_path = os.environ['SCRAPY_SETTINGS_MODULE']
+        scrapy_settings.setmodule(settings_module_path, priority='project')
+        return scrapy_settings
+
+    def crawl(self, board_name, page_num):
+        invalid_board_name = True
+        spider_arg = None
+        if board_name:
+            board = f"{board_name.capitalize()}Spider"
+            for i in range(len(spiders)):
+                if spiders[i].__name__ == board:
+                    spider_arg = [spiders[i]]
+                    invalid_board_name = False
+                    break
+        else:
+            spider_arg = spiders
+
+        self.manager = billiard.Manager()
+        return_dic = self.manager.dict()
+        if invalid_board_name and board_name:
+            message = "Invalid board name. Request with correct board name to initialize Database."
+            result_code = 1
+            return_dic["empty"] = ""
+        else:
+            scrapy_settings = self.get_scrapy_settings()
+            crawl_spider.page_num = page_num
+            proc_list = []
+            for spider in spider_arg:
+                proc = billiard.context.Process(
+                    target=self._crawling_start, 
+                    args=(
+                        scrapy_settings,
+                        spider,
+                        board_name,
+                        return_dic,
+                    )
+                )
+                proc.start()
+                proc_list.append(proc)
+            for proc in proc_list:
+                proc.join()
+            message = "Success."
+            result_code = 0
+        res = dict()
+        res["result_code"] = result_code
+        res["message"] = message
+        res["output"] =  json.dumps(dict(return_dic))
+        return res

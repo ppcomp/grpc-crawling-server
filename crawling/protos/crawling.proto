@@ -19,4 +19,5 @@ message ScrapRequest {
 message ScrapReply {
   int32 resultCode = 1;
   string message = 2;
+  string output = 3;
 }

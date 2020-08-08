@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\031io.grpc.crawling.crawlingB\rCrawlingProtoP\001\242\002\003HLW',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0e\x63rawling.proto\x12\x08\x63rawling\",\n\x0cScrapRequest\x12\r\n\x05\x62oard\x18\x01 \x01(\t\x12\r\n\x05pages\x18\x02 \x01(\x05\"1\n\nScrapReply\x12\x12\n\nresultCode\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\t2C\n\x08\x43rawling\x12\x37\n\x05Scrap\x12\x16.crawling.ScrapRequest\x1a\x14.crawling.ScrapReply\"\x00\x42\x32\n\x19io.grpc.crawling.crawlingB\rCrawlingProtoP\x01\xa2\x02\x03HLWb\x06proto3'
+  serialized_pb=b'\n\x0e\x63rawling.proto\x12\x08\x63rawling\",\n\x0cScrapRequest\x12\r\n\x05\x62oard\x18\x01 \x01(\t\x12\r\n\x05pages\x18\x02 \x01(\x05\"A\n\nScrapReply\x12\x12\n\nresultCode\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x0e\n\x06output\x18\x03 \x01(\t2C\n\x08\x43rawling\x12\x37\n\x05Scrap\x12\x16.crawling.ScrapRequest\x1a\x14.crawling.ScrapReply\"\x00\x42\x32\n\x19io.grpc.crawling.crawlingB\rCrawlingProtoP\x01\xa2\x02\x03HLWb\x06proto3'
 )
 
 
@@ -86,6 +86,13 @@ _SCRAPREPLY = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='output', full_name='crawling.ScrapReply.output', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -99,7 +106,7 @@ _SCRAPREPLY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=74,
-  serialized_end=123,
+  serialized_end=139,
 )
 
 DESCRIPTOR.message_types_by_name['ScrapRequest'] = _SCRAPREQUEST
@@ -130,8 +137,8 @@ _CRAWLING = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=125,
-  serialized_end=192,
+  serialized_start=141,
+  serialized_end=208,
   methods=[
   _descriptor.MethodDescriptor(
     name='Scrap',

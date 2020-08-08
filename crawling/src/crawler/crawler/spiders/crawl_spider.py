@@ -184,7 +184,7 @@ class DefaultSpider(scrapy.Spider):
 
         for id, is_fixed, title, link, date, author, reference in zip(
             ids, is_fixeds, titles, links, dates, authors, references):
-            scrapyed_info = {
+            scraped_info = {
                 'model' : self.model,
                 'id' : id,
                 'site' : self.model.lower(),
@@ -195,7 +195,12 @@ class DefaultSpider(scrapy.Spider):
                 'author' : author,
                 'reference' : reference,
             }
-            yield scrapyed_info
+            self.scraped_info_list.append(scraped_info)
+            yield scraped_info
+
+    # Override close()
+    def close(self, spider, reason):
+        self.output_callback(self.scraped_info_list)
 
 page_num = 1
 # Spider Class 자동 생성
@@ -203,7 +208,7 @@ for key, item in data.items():
     if key.find('test') == -1:
         txt = f"""
 class {key.capitalize()}Spider(DefaultSpider):
-    def __init__(self):
+    def __init__(self, **kwargs):
         from src.data import data
         args = data['{key}']
 
@@ -216,7 +221,9 @@ class {key.capitalize()}Spider(DefaultSpider):
         else:
             self.start_urls = [args['start_urls']]
 
-        super().__init__()
+        self.output_callback = kwargs.get('args').get('callback')
+        self.scraped_info_list = []
+        super().__init__(**kwargs)
         super().set_args(args)
 """
         exec(compile(txt,"<string>","exec"))

@@ -7,14 +7,19 @@ import grpc
 
 from grpc_files import crawling_pb2
 from grpc_files import crawling_pb2_grpc
-from src.tasks import crawling
+from src.tasks import CustomCrawler
 
 
 class Crawling(crawling_pb2_grpc.CrawlingServicer):
 
     def Scrap(self, request, context):
-        resultCode, message = crawling(request.board, request.pages)
-        return crawling_pb2.ScrapReply(resultCode=resultCode, message=message)
+        custom_crawler = CustomCrawler()
+        res = custom_crawler.crawl(request.board, request.pages)
+        return crawling_pb2.ScrapReply(
+            resultCode=res["result_code"], 
+            message=res["message"],
+            output=res["output"]
+        )
 
 
 def serve():

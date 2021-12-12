@@ -1,6 +1,9 @@
-import sys, os
 import json
+import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 def get_secret(setting):
     try:
@@ -11,5 +14,7 @@ def get_secret(setting):
             secret = json.loads(f.read())
     return secret[setting]
 
+
 # Scheme: "postgres+psycopg2://<USERNAME>:<PASSWORD>@<IP_ADDRESS>:<PORT>/<DATABASE_NAME>"
-DATABASE_URI = f"postgres+psycopg2://postgres:{get_secret('DB_PASSWORD')}@db:5432/postgres"
+# DATABASE_URI = f"postgres+psycopg2://postgres:{get_secret('DB_PASSWORD')}@db:5432/postgres"
+DATABASE_URI = "mysql+pymysql://root:root@localhost/notice"

@@ -7,7 +7,7 @@ Base = declarative_base()
 
 
 class Notice(Base):
-    __tablename__ = 'notice'
+    __tablename__ = 'notice2'
     id = Column(BIGINT, primary_key=True)
     bid = Column(BIGINT)
     code = Column(String(30))

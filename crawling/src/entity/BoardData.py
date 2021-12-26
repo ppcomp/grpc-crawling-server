@@ -7,6 +7,7 @@ Base = declarative_base()
 class BoardData(Base):
     __tablename__ = 'board_data'
     id = Column(BIGINT, primary_key=True)
+    crawling_status = Column(String(2))
     code = Column(String(30), unique=True)
     path = Column(String(30))
     name = Column(String(30))

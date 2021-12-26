@@ -3,17 +3,21 @@ import logging
 
 import grpc
 
+from crawling.grpc_files.crawling_pb2_grpc import CrawlingStub
 from grpc_files import crawling_pb2
 from grpc_files import crawling_pb2_grpc
 
-def start_scrap(stub, board=None, pages=1):
+
+def start_scrap(stub: CrawlingStub, board=None, pages=1):
     scrap_request = crawling_pb2.ScrapRequest(board=board, pages=pages)
     feature = stub.Scrap(scrap_request)
+    print(feature)
     if feature.resultCode == 0:
         print("Server crawling completed with result code 0.")
     else:
         print(f"Server crawling is not completed with result code {feature.resultCode}.")
         print(f"Cause by {feature.message}")
+
 
 def run():
     # NOTE(gRPC Python Team): .close() is possible on a channel and should be

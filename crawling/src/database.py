@@ -1,9 +1,9 @@
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
-from config import DATABASE_URI
-from crawling.src.model.BoardData import BoardData
-from crawling.src.model.Notice import Notice
+from .config import DATABASE_URI
+from crawling.src.entity.BoardData import BoardData
+from crawling.src.entity.Notice import Notice
 
 engine = sqlalchemy.create_engine(DATABASE_URI)
 Session = sessionmaker(bind=engine)
